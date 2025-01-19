@@ -6,6 +6,7 @@ import { logout } from '../../actions/user.action';
 
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
@@ -34,22 +35,38 @@ export class HomeComponent {
     const { count } = this.generateStudentsForm.value;
     this.apiService.get('student/generateStudentsExcel', { count }).subscribe({
       next: (response: any) => {
-        console.log(response);
+        Swal.fire({
+          title: `Students generated `,
+          text: `you have successfully generated ${count} students`,
+          icon: 'success',
+        });
       },
       error: (err?) => {
         console.error(err);
-        alert('error generating students');
+        Swal.fire({
+          title: 'generation error',
+          text: 'error generating students',
+          icon: 'error',
+        });
       },
     });
   }
   onClickGenerateCsv() {
     this.apiService.get('student/generateStudentsCSV').subscribe({
       next: (response: any) => {
-        console.log(response);
+        Swal.fire({
+          title: `Csv success`,
+          text: 'you have generated csv successfully',
+          icon: 'success',
+        });
       },
       error: (err?) => {
         console.error(err);
-        alert('error generating csv');
+        Swal.fire({
+          title: `CSV error`,
+          text: 'Error generating csv',
+          icon: 'error',
+        });
       },
     });
   }

@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import Swal from 'sweetalert2';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -32,7 +33,13 @@ export class LoginComponent {
           username: response?.user?.userName,
         };
         this.store.dispatch(loginSuccess(user));
+        Swal.fire({
+          title: `Hello ${user.username}`,
+          text: 'you have logged in successfully',
+          icon: 'success',
+        });
         localStorage.setItem('authToken', response.jwt);
+
         this.router.navigate(['/home']);
       },
       error: (err?) => {
