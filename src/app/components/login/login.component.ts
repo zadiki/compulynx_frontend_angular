@@ -28,16 +28,17 @@ export class LoginComponent {
     this.apiService.post('user/login', loginPayload).subscribe({
       next: (response: any) => {
         const user: User = {
-          userId: 1,
-          username: 'zadiki',
+          userId: response?.user?.id,
+          username: response?.user?.userName,
         };
         this.store.dispatch(loginSuccess(user));
+        localStorage.setItem('authToken', response.jwt);
+        this.router.navigate(['/home']);
       },
       error: (err?) => {
         console.error(err);
         alert('Login failed!');
       },
     });
-    this.router.navigate(['/home']);
   }
 }
