@@ -2,16 +2,18 @@ import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import Swal from 'sweetalert2';
+import { Student } from '../../models/student.model';
+import { CommonModule, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgFor, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
   apiService = inject(ApiService);
-  studentList: Student[] = signal([]);
+  students = signal<Student[]>([]);
   generateStudentsForm = new FormGroup({
     count: new FormControl(0),
   });
@@ -52,7 +54,8 @@ export class DashboardComponent {
     const { count } = this.generateStudentsForm.value;
     this.apiService.get('student/generateStudentsExcel', { count }).subscribe({
       next: (response: any) => {
-        this.studentList.set(response);
+        this.students.set(response);
+        console.log(this.students());
         Swal.fire({
           title: `Students generated `,
           text: `you have successfully generated ${count} students`,
