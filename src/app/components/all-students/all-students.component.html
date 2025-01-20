@@ -1,5 +1,42 @@
 <div class="container my-4">
   <h2 class="text-center mb-4">All Student List</h2>
+  <form class="mt-2 mb-2" [formGroup]="filterForm">
+    <div class="row align-items-center g-2">
+      <div class="col-auto pe-0">
+        <label for="firstName" class="col-form-label">First Name</label>
+      </div>
+      <div class="col-2">
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          formControlName="firstName"
+        />
+      </div>
+      <div class="col-auto ps-3 pe-0">
+        <label for="lastName" class="col-form-label">Last Name</label>
+      </div>
+      <div class="col-2">
+        <input
+          type="text"
+          class="form-control"
+          id="lastName"
+          formControlName="lastName"
+        />
+      </div>
+      <div class="col-auto ps-3 pe-0">
+        <label for="dob" class="col-form-label">Date of birth</label>
+      </div>
+      <div class="col-2">
+        <p-datepicker formControlName="dateOfBirth" />
+      </div>
+      <div class="col">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary">filter</button>
+        </div>
+      </div>
+    </div>
+  </form>
   <div class="table-responsive">
     <table class="table table-bordered table-striped">
       <thead class="thead-dark">
