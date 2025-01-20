@@ -24,6 +24,13 @@ export class AllStudentsComponent {
     this.getAllStudents();
   }
 
+  onNextClicked() {
+    this.page.set(this.page() + 1);
+  }
+  onPreviousClicked() {
+    this.page() > 0 && this.page.set(this.page() - 1);
+  }
+
   getAllStudents() {
     this.apiService
       .get('student/', {
@@ -34,8 +41,10 @@ export class AllStudentsComponent {
       })
       .subscribe({
         next: (response: any) => {
-          const { content: students, number } = response;
+          const { content: students, number, last } = response;
           this.students.set(students);
+          this.isLast.set(last);
+          this.page.set(number);
         },
         error: (err?: any) => {
           console.error(err);

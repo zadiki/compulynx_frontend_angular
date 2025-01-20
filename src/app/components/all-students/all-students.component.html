@@ -48,8 +48,22 @@
       </tbody>
     </table>
     <div class="btn-group" role="group" aria-label="Action Buttons">
-      <button *ngIf="page() > 0" class="btn btn-primary btn-sm">prev</button>
-      <button *ngIf="!isLast()" class="btn btn-danger btn-sm">next</button>
+      <button
+        (click)="onPreviousClicked()"
+        class="btn btn-sm"
+        [class.btn-primary]="page() > 1"
+        [class.btn-secondary]="page()! > 1"
+      >
+        prev
+      </button>
+      <button
+        (click)="onNextClicked()"
+        class="btn btn-sm"
+        [class.btn-danger]="!isLast() && page() > 1"
+        [class.btn-secondary]="isLast() || page()! > 1"
+      >
+        next
+      </button>
     </div>
   </div>
 </div>
