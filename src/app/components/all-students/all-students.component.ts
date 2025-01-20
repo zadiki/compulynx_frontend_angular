@@ -1,9 +1,20 @@
-import { Component, inject, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  model,
+  Output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Student } from '../../models/student.model';
 import Swal from 'sweetalert2';
 import { ApiService } from '../../services/api.service';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule, isPlatformBrowser, NgFor } from '@angular/common';
+import { Modal } from 'bootstrap';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -16,8 +27,9 @@ export class AllStudentsComponent {
   apiService = inject(ApiService);
   students = signal<Student[]>([]);
 
-  page = signal(1);
+  page = signal(0);
   isLast = signal(false);
+  studentToDelete?: Student;
 
   filterForm = new FormGroup({
     count: new FormControl(0),
@@ -31,6 +43,26 @@ export class AllStudentsComponent {
 
   ngOnInit() {
     this.getAllStudents();
+  }
+
+  @Output() confirm = new EventEmitter<any>();
+  @ViewChild('deleteModal', { static: true }) modalElement!: ElementRef;
+
+  private modalInstance: Modal | null = null;
+
+  openModal(student: Student) {
+    this.studentToDelete = student;
+    this.modalInstance = new Modal(this.modalElement.nativeElement, {});
+    this.modalInstance.show();
+  }
+
+  closeModal() {
+    this.modalInstance?.hide();
+  }
+
+  onConfirm() {
+    this.confirm.emit('done');
+    this.closeModal();
   }
 
   onNextClicked() {
@@ -69,5 +101,28 @@ export class AllStudentsComponent {
           });
         },
       });
+  }
+
+  onConfirmDeleteStudent(student?: Student) {
+    this.apiService.delete(`student/${student?.studentId}`).subscribe({
+      next: (response: any) => {
+        this.students.set(
+          this.students().filter((s) => s.studentId !== student?.studentId)
+        );
+        this.closeModal();
+        Swal.fire({
+          title: `Deletion success`,
+          text: 'Successfully deleted student',
+          icon: 'success',
+        });
+      },
+      error: (err?: any) => {
+        Swal.fire({
+          title: `delete  error`,
+          text: 'Error deleting student',
+          icon: 'error',
+        });
+      },
+    });
   }
 }

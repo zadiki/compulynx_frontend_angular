@@ -1,8 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-
-import { logout } from '../../actions/user.action';
 
 import { ApiService } from '../../services/api.service';
 import Swal from 'sweetalert2';

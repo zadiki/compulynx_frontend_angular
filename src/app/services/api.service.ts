@@ -19,6 +19,15 @@ export class ApiService {
     const headers = options.headers || new HttpHeaders();
     return this.http.get(`${this.baseUrl}/${endpoint}`, { headers, params });
   }
+
+  put(endpoint: string, data: any, options: any = {}) {
+    return this.http.put(`${this.baseUrl}/${endpoint}`, data, options);
+  }
+
+  delete(endpoint: string, params: any = {}, options: any = {}) {
+    const headers = options.headers || new HttpHeaders();
+    return this.http.delete(`${this.baseUrl}/${endpoint}`, { headers, params });
+  }
 }
 interface Params {
   [key: string]: any;
