@@ -1,17 +1,21 @@
-<nav class="navbar navbar-light bg-light">
-  <a routerLink="/home" class="navbar-brand">Student System</a>
+<div class="d-flex">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
 
-  <div class="nav-item">
-    {{ userName() }}
-    <img
-      src="https://i.pravatar.cc/300"
-      width="30"
-      height="30"
-      class="align-top rounded-circle"
-      alt=""
-    />
+  <!-- Main Content -->
+  <div class="flex-grow-1">
+    <nav class="navbar navbar-light bg-light">
+      <div class="nav-item ms-auto">
+        {{ userName() }}
+        <img
+          src="https://i.pravatar.cc/300"
+          width="30"
+          height="30"
+          class="align-top rounded-circle"
+          alt=""
+        />
+      </div>
+    </nav>
+    <router-outlet></router-outlet>
   </div>
-</nav>
-<main>
-  <router-outlet />
-</main>
+</div>

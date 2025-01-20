@@ -1,0 +1,12 @@
+/* Ensure the sidebar spans the full height */
+:host {
+    display: block;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  .active {
+    background-color: #007bff !important;
+    color: #fff !important;
+  }
+  

@@ -15,7 +15,27 @@ export class ApiService {
   }
 
   get(endpoint: string, params: any = {}, options: any = {}) {
+    params = cleanupParams(params);
     const headers = options.headers || new HttpHeaders();
     return this.http.get(`${this.baseUrl}/${endpoint}`, { headers, params });
   }
+}
+interface Params {
+  [key: string]: any;
+}
+
+function cleanupParams(params: Params): Params {
+  const cleanedParams = { ...params };
+
+  for (const key in cleanedParams) {
+    if (
+      cleanedParams[key] == null ||
+      cleanedParams[key] == 'null' ||
+      cleanedParams[key] == ''
+    ) {
+      delete cleanedParams[key];
+    }
+  }
+
+  return cleanedParams;
 }

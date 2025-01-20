@@ -1,0 +1,55 @@
+<div class="container my-4">
+  <h2 class="text-center mb-4">All Student List</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Photo</th>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Date of Birth</th>
+          <th scope="col">Class</th>
+          <th scope="col">Score</th>
+          <th scope="col">Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students()">
+          <td>
+            <img
+              [src]="student.photoPath"
+              alt="nophoto"
+              class="rounded-circle"
+              style="width: 50px; height: 50px"
+            />
+          </td>
+          <td>{{ student.studentId }}</td>
+          <td>{{ student.firstName }} {{ student.lastName }}</td>
+          <td>{{ student.dateOfBirth | date : "dd-MM-yyyy" }}</td>
+          <td>{{ student.studentClass }}</td>
+          <td>{{ student.score }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.bg-success]="student.status === 'ACTIVE'"
+              [class.bg-danger]="student.status === 'INACTIVE'"
+            >
+              {{ student.status }}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group" role="group" aria-label="Action Buttons">
+              <button class="btn btn-primary btn-sm">Edit</button>
+              <button class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="btn-group" role="group" aria-label="Action Buttons">
+      <button *ngIf="page() > 0" class="btn btn-primary btn-sm">prev</button>
+      <button *ngIf="!isLast()" class="btn btn-danger btn-sm">next</button>
+    </div>
+  </div>
+</div>

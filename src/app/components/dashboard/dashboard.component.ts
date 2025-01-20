@@ -41,11 +41,18 @@ export class DashboardComponent {
   onClickSaveStudents() {
     this.apiService.get('student/saveGeneratedStudents').subscribe({
       next: (response: any) => {
-        console.log(response);
+        Swal.fire({
+          title: `Save success`,
+          text: 'you have generated students successfully',
+          icon: 'success',
+        });
       },
       error: (err?) => {
-        console.error(err);
-        alert('error saving students');
+        Swal.fire({
+          title: `CSV error`,
+          text: 'error saving students',
+          icon: 'error',
+        });
       },
     });
   }

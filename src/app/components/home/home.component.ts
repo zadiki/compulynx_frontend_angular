@@ -6,10 +6,11 @@ import { logout } from '../../actions/user.action';
 
 import { ApiService } from '../../services/api.service';
 import Swal from 'sweetalert2';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, RouterOutlet],
+  imports: [RouterOutlet, SidebarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -23,9 +24,5 @@ export class HomeComponent {
     this.store
       .select('user')
       .subscribe((value) => this.userName.set(value.user?.username || ''));
-  }
-  onLogout() {
-    this.store.dispatch(logout());
-    this.router.navigate(['/login']);
   }
 }
