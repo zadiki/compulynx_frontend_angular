@@ -30,7 +30,7 @@ export class AllStudentsComponent {
   page = signal(0);
   isLast = signal(false);
   studentToDelete?: Student;
-
+  studentToEdit?: Student;
   filterForm = new FormGroup({
     count: new FormControl(0),
     firstName: new FormControl(''),
@@ -41,28 +41,55 @@ export class AllStudentsComponent {
     dateOfBirth: new FormControl(null),
   });
 
+  editStudentForm = new FormGroup({
+    firstName: new FormControl(''),
+    lastName: new FormControl(''),
+    studentClass: new FormControl(''),
+    status: new FormControl(''),
+  });
+
   ngOnInit() {
     this.getAllStudents();
   }
 
-  @Output() confirm = new EventEmitter<any>();
-  @ViewChild('deleteModal', { static: true }) modalElement!: ElementRef;
+  @ViewChild('deleteModal', { static: true }) deleteElement!: ElementRef;
+  @ViewChild('editModal', { static: true }) editElement!: ElementRef;
 
-  private modalInstance: Modal | null = null;
+  private deleteModalInstance: Modal | null = null;
+  private editModalInstance: Modal | null = null;
 
-  openModal(student: Student) {
+  openDeleteModal(student: Student) {
     this.studentToDelete = student;
-    this.modalInstance = new Modal(this.modalElement.nativeElement, {});
-    this.modalInstance.show();
+    this.deleteModalInstance = new Modal(this.deleteElement.nativeElement, {});
+    this.deleteModalInstance.show();
   }
 
-  closeModal() {
-    this.modalInstance?.hide();
+  closeDeleteModal() {
+    this.deleteModalInstance?.hide();
   }
 
-  onConfirm() {
-    this.confirm.emit('done');
-    this.closeModal();
+  openEditModal(student: Student) {
+    this.studentToEdit = student;
+    const { firstName, lastName, status, studentClass } = this.studentToEdit;
+    this.editStudentForm.setValue({
+      firstName,
+      lastName,
+      status,
+      studentClass,
+    });
+    this.editModalInstance = new Modal(this.editElement.nativeElement, {});
+    this.editModalInstance.show();
+  }
+
+  closeEditModal() {
+    this.editModalInstance?.hide();
+  }
+
+  onEditSubmit() {
+    this.editStudentInfo({
+      ...this.studentToEdit,
+      ...this.editStudentForm.value,
+    });
   }
 
   onNextClicked() {
@@ -78,12 +105,13 @@ export class AllStudentsComponent {
   }
 
   getAllStudents() {
+    const { firstName, lastName, studentClass } = this.filterForm.value;
     this.apiService
       .get('student/', {
         page: this.page(),
-        firstName: this.filterForm.value.firstName,
-        lastName: this.filterForm.value.lastName,
-        studentClass: this.filterForm.value.studentClass,
+        firstName,
+        lastName,
+        studentClass,
       })
       .subscribe({
         next: (response: any) => {
@@ -109,7 +137,7 @@ export class AllStudentsComponent {
         this.students.set(
           this.students().filter((s) => s.studentId !== student?.studentId)
         );
-        this.closeModal();
+        this.closeDeleteModal();
         Swal.fire({
           title: `Deletion success`,
           text: 'Successfully deleted student',
@@ -124,5 +152,26 @@ export class AllStudentsComponent {
         });
       },
     });
+  }
+
+  editStudentInfo(payload: any) {
+    this.apiService
+      .put(`student/${this.studentToEdit?.studentId}`, payload)
+      .subscribe({
+        next: (response: any) => {
+          Swal.fire({
+            title: `Updated`,
+            text: 'Successfully Updated student',
+            icon: 'success',
+          });
+        },
+        error: (err?: any) => {
+          Swal.fire({
+            title: `Updated  error`,
+            text: 'Error updateing student',
+            icon: 'error',
+          });
+        },
+      });
   }
 }

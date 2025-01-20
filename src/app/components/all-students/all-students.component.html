@@ -82,10 +82,15 @@
           </td>
           <td>
             <div class="btn-group" role="group" aria-label="Action Buttons">
-              <button class="btn btn-primary btn-sm">Edit</button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="openEditModal(student)"
+              >
+                Edit
+              </button>
               <button
                 class="btn btn-danger btn-sm"
-                (click)="openModal(student)"
+                (click)="openDeleteModal(student)"
               >
                 Delete
               </button>
@@ -115,43 +120,6 @@
   </div>
 </div>
 
-<div class="modal fade" tabindex="-1" aria-hidden="true" #modalElement>
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title" id="modalElement">Confirm Deletion</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-          (click)="closeModal()"
-        ></button>
-      </div>
-      <button
-        type="button"
-        class="btn-close btn-close-white"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      ></button>
-    </div>
-    <div class="modal-body">
-      <p class="mb-0">
-        Are you sure you want to delete this student ? This action cannot be
-        undone.
-      </p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="closeModal()">
-        Close
-      </button>
-      <button type="button" class="btn btn-primary" (click)="onConfirm()">
-        Confirm
-      </button>
-    </div>
-  </div>
-</div>
-
 <div
   class="modal fade"
   #deleteModal
@@ -168,7 +136,7 @@
           class="btn-close btn-close-white"
           data-bs-dismiss="modal"
           aria-label="Close"
-          (click)="closeModal()"
+          (click)="closeDeleteModal()"
         ></button>
       </div>
       <div class="modal-body">
@@ -182,7 +150,7 @@
           type="button"
           class="btn btn-secondary"
           data-bs-dismiss="modal"
-          (click)="closeModal()"
+          (click)="closeDeleteModal()"
         >
           Cancel
         </button>
@@ -195,6 +163,65 @@
           Delete
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  #editModal
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">User Registration</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form (ngSubmit)="onEditSubmit()" [formGroup]="editStudentForm">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              formControlName="firstName"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              formControlName="lastName"
+              required
+            />
+          </div>
+          <div class="mb-3"></div>
+          <div class="mb-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
