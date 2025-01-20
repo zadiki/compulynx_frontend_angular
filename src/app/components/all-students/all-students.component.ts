@@ -86,10 +86,11 @@ export class AllStudentsComponent {
   }
 
   onEditSubmit() {
-    this.editStudentInfo({
+    let p: Student = {
       ...this.studentToEdit,
       ...this.editStudentForm.value,
-    });
+    } as Student;
+    this.editStudentInfo(p);
   }
 
   onNextClicked() {
@@ -154,24 +155,32 @@ export class AllStudentsComponent {
     });
   }
 
-  editStudentInfo(payload: any) {
-    this.apiService
-      .put(`student/${this.studentToEdit?.studentId}`, payload)
-      .subscribe({
-        next: (response: any) => {
-          Swal.fire({
-            title: `Updated`,
-            text: 'Successfully Updated student',
-            icon: 'success',
-          });
-        },
-        error: (err?: any) => {
-          Swal.fire({
-            title: `Updated  error`,
-            text: 'Error updateing student',
-            icon: 'error',
-          });
-        },
-      });
+  editStudentInfo(payload: Student) {
+    this.apiService.put(`student/${payload?.studentId}`, payload).subscribe({
+      next: (response: any) => {
+        this.students.set(
+          this.students().map((s: Student) => {
+            if (s.studentId == payload.studentId) {
+              return payload;
+            } else {
+              return s;
+            }
+          })
+        );
+        this.closeEditModal();
+        Swal.fire({
+          title: `Updated`,
+          text: 'Successfully Updated student',
+          icon: 'success',
+        });
+      },
+      error: (err?: any) => {
+        Swal.fire({
+          title: `Updated  error`,
+          text: 'Error updateing student',
+          icon: 'error',
+        });
+      },
+    });
   }
 }
