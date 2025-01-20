@@ -41,6 +41,9 @@ export class AllStudentsComponent {
     this.page() > 0 && this.page.set(this.page() - 1);
     this.getAllStudents();
   }
+  onfilterSubmited() {
+    this.getAllStudents();
+  }
 
   getAllStudents() {
     this.apiService

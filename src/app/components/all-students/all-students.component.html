@@ -1,6 +1,10 @@
 <div class="container my-4">
   <h2 class="text-center mb-4">All Student List</h2>
-  <form class="mt-2 mb-2" [formGroup]="filterForm">
+  <form
+    class="mt-2 mb-2"
+    [formGroup]="filterForm"
+    (ngSubmit)="onfilterSubmited()"
+  >
     <div class="row align-items-center g-2">
       <div class="col-auto pe-0">
         <label for="firstName" class="col-form-label">First Name</label>
