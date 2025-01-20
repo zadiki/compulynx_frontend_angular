@@ -1,44 +1,6 @@
 <nav class="navbar navbar-light bg-light">
   <a routerLink="/home" class="navbar-brand">Student System</a>
-  <div class="nav-item">
-    <form [formGroup]="generateStudentsForm" (ngSubmit)="onSubmit()">
-      <div class="input-group mb-3">
-        <input
-          class="form-control"
-          type="number"
-          placeholder="0"
-          min="0"
-          max="10000"
-          aria-label="generate"
-          formControlName="count"
-          aria-describedby="basic-addon2"
-        />
-        <button
-          class="input-group-text btn btn-outline-success"
-          type="submit"
-          id="basic-addon2"
-        >
-          Generate students
-        </button>
-      </div>
-    </form>
-  </div>
-  <div>
-    <button
-      class="input-group-text btn btn-outline-success"
-      (click)="onClickGenerateCsv()"
-    >
-      GenerateCsv
-    </button>
-  </div>
-  <div>
-    <button
-      class="input-group-text btn btn-outline-success"
-      (click)="onClickSaveStudents()"
-    >
-      Save Students
-    </button>
-  </div>
+
   <div class="nav-item">
     {{ userName() }}
     <img

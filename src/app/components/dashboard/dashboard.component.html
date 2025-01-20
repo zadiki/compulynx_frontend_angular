@@ -1,1 +1,43 @@
-<p>dashboard works!</p>
+<div class="d-flex justify-content-center">
+  <form class="mr-3" [formGroup]="generateStudentsForm" (ngSubmit)="onSubmit()">
+    <div class="input-group mb-3">
+      <input
+        class="form-control"
+        type="number"
+        placeholder="0"
+        min="0"
+        max="10000"
+        aria-label="generate"
+        formControlName="count"
+        aria-describedby="basic-addon2"
+      />
+      <button
+        class="input-group-text btn btn-outline-success"
+        type="submit"
+        id="basic-addon2"
+      >
+        Generate students
+      </button>
+    </div>
+  </form>
+
+  <div class="mr-3">
+    <button
+      class="input-group-text btn btn-outline-success"
+      (click)="onClickGenerateCsv()"
+    >
+      GenerateCsv
+    </button>
+  </div>
+  <div class="mr-3">
+    <button
+      class="input-group-text btn btn-outline-success"
+      (click)="onClickSaveStudents()"
+    >
+      Save Students
+    </button>
+  </div>
+</div>
+<main>
+  <table></table>
+</main>
