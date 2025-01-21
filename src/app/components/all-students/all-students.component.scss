@@ -1,0 +1,19 @@
+/* Ensure the label spans the entire area */
+label {
+    cursor: pointer;
+  }
+  
+  /* Hide the text initially */
+  .edit-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff; /* Optional: bootstrap primary color */
+    opacity: 0.3; /* Hidden by default */
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  /* Show the text when hovering over the label */
+  label:hover .edit-text {
+    opacity: 1;
+  }
+  

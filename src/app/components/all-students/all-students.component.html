@@ -188,6 +188,28 @@
       </div>
       <form (ngSubmit)="onEditSubmit()" [formGroup]="editStudentForm">
         <div class="modal-body">
+          <div class="text-center position-relative">
+            <label for="imageUpload" class="d-inline-block">
+              <img
+                [src]="editImageUrl"
+                alt="Profile"
+                [style.width.px]="150"
+                [style.height.px]="150"
+                style="object-fit: cover"
+                class="rounded-circle img-thumbnail"
+              />
+              <span class="edit-text d-block text-center">Edit</span>
+              <input
+                type="file"
+                id="imageUpload"
+                class="d-none"
+                formControlName="profilePhoto"
+                (change)="onStudentPhotoSelected($event)"
+                accept="image/*"
+              />
+            </label>
+          </div>
+
           <div class="mb-3">
             <label for="firstName" class="form-label">First Name</label>
             <input

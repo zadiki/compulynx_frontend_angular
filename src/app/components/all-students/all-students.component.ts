@@ -31,6 +31,7 @@ export class AllStudentsComponent {
   isLast = signal(false);
   studentToDelete?: Student;
   studentToEdit?: Student;
+  editImageUrl: string = '';
   filterForm = new FormGroup({
     count: new FormControl(0),
     firstName: new FormControl(''),
@@ -40,7 +41,7 @@ export class AllStudentsComponent {
     status: new FormControl(''),
     dateOfBirth: new FormControl(null),
   });
-
+  photoToUpload?: File;
   editStudentForm = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
@@ -70,6 +71,8 @@ export class AllStudentsComponent {
 
   openEditModal(student: Student) {
     this.studentToEdit = student;
+    this.editImageUrl = student.photoPath;
+    this.photoToUpload = undefined;
     const { firstName, lastName, status, studentClass } = this.studentToEdit;
     this.editStudentForm.setValue({
       firstName,
@@ -156,12 +159,23 @@ export class AllStudentsComponent {
   }
 
   editStudentInfo(payload: Student) {
-    this.apiService.put(`student/${payload?.studentId}`, payload).subscribe({
+    let path = `student/${payload?.studentId}`;
+    let body;
+    if (this.photoToUpload) {
+      body = new FormData();
+      body.append('image', this.photoToUpload);
+      body.append('studentData', JSON.stringify(payload));
+      path = `student/upload/${payload?.studentId}`;
+    } else {
+      body = payload;
+    }
+
+    this.apiService.put(path, body).subscribe({
       next: (response: any) => {
         this.students.set(
           this.students().map((s: Student) => {
             if (s.studentId == payload.studentId) {
-              return payload;
+              return response as Student;
             } else {
               return s;
             }
@@ -182,5 +196,44 @@ export class AllStudentsComponent {
         });
       },
     });
+  }
+
+  onStudentPhotoSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // Validate file size (5MB = 5 * 1024 * 1024 bytes)
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire({
+          title: `Updated  error`,
+          text: 'File size exceeds 5MB. Please choose a smaller file.',
+          icon: 'error',
+        });
+        input.value = ''; // Reset the file input
+        return;
+      }
+
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/png'];
+      if (!validTypes.includes(file.type)) {
+        Swal.fire({
+          title: `Updated  error`,
+          text: 'Invalid file type. Please select a PNG or JPEG image.',
+          icon: 'error',
+        });
+        input.value = ''; // Reset the file input
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.editImageUrl = reader.result as string;
+        // Set the preview image
+      };
+      reader.readAsDataURL(file);
+      this.photoToUpload = file;
+    }
   }
 }
