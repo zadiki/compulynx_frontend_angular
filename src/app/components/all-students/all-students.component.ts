@@ -119,13 +119,14 @@ export class AllStudentsComponent {
   }
 
   getAllStudents() {
-    const { firstName, lastName, studentClass } = this.filterForm.value;
+    const { firstName, lastName, studentClass, status } = this.filterForm.value;
     this.apiService
       .get('student/', {
         page: this.page(),
         firstName,
         lastName,
         studentClass,
+        status,
       })
       .subscribe({
         next: (response: any) => {

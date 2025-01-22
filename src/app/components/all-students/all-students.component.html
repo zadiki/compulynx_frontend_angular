@@ -30,6 +30,24 @@
         />
       </div>
       <div class="col-auto ps-3 pe-0">
+        <label for="studentClass" class="form-label">Class</label>
+      </div>
+      <div class="col-2">
+        <select
+          class="form-select"
+          id="studentClass"
+          formControlName="studentClass"
+          required
+        >
+          <option [value]="'CLASS_1'">Class 1</option>
+          <option [value]="'CLASS_2'">Class 2</option>
+          <option [value]="'CLASS_3'">Class 3</option>
+          <option [value]="'CLASS_4'">Class 4</option>
+          <option [value]="'CLASS_5'" selected>Class 5</option>
+        </select>
+      </div>
+
+      <div class="col-auto ps-3 pe-0">
         <label for="dateOfBirth" class="col-form-label">Date of Birth</label>
       </div>
       <div class="col-2">
@@ -46,6 +64,7 @@
       </div>
       <div class="col-2">
         <select class="form-select" formControlName="status" required>
+          <option value="" selected>ALL</option>
           <option [value]="'ACTIVE'">ACTIVE</option>
           <option [value]="'INACTIVE'">INACTIVE</option>
         </select>
@@ -260,8 +279,8 @@
               >
                 <option [value]="'CLASS_1'">Class 1</option>
                 <option [value]="'CLASS_2'">Class 2</option>
-                <option [value]="'CLASS_3'" selected>Class 3</option>
-                <option [value]="'CLASS_4'" selected>Class 4</option>
+                <option [value]="'CLASS_3'">Class 3</option>
+                <option [value]="'CLASS_4'">Class 4</option>
                 <option [value]="'CLASS_5'" selected>Class 5</option>
               </select>
             </div>
@@ -272,6 +291,8 @@
                 class="form-control"
                 id="score"
                 formControlName="score"
+                max="100"
+                min="50"
                 required
               />
             </div>
