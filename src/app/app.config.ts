@@ -8,7 +8,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
-import { provideRouter } from '@angular/router';
+import { provideRouter, withRouterConfig } from '@angular/router';
 
 import { routes } from './app.routes';
 import {
@@ -30,7 +30,13 @@ export const appConfig: ApplicationConfig = {
         preset: Aura,
       },
     }),
-    provideRouter(routes),
+    provideRouter(
+      routes,
+
+      withRouterConfig({
+        onSameUrlNavigation: 'reload',
+      })
+    ),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideClientHydration(withEventReplay()),
     provideStore({

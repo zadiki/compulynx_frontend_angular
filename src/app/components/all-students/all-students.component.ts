@@ -15,6 +15,8 @@ import { ApiService } from '../../services/api.service';
 import { CommonModule, isPlatformBrowser, NgFor } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-all-students',
@@ -30,6 +32,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class AllStudentsComponent {
   apiService = inject(ApiService);
+  router = inject(Router);
   students = signal<Student[]>([]);
 
   page = signal(0);
@@ -58,6 +61,12 @@ export class AllStudentsComponent {
 
   ngOnInit() {
     this.getAllStudents();
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.filterForm.reset();
+        this.getAllStudents();
+      });
   }
 
   @ViewChild('deleteModal', { static: true }) deleteElement!: ElementRef;
@@ -119,7 +128,8 @@ export class AllStudentsComponent {
   }
 
   getAllStudents() {
-    const { firstName, lastName, studentClass, status } = this.filterForm.value;
+    const { firstName, lastName, studentClass, status, dateOfBirth } =
+      this.filterForm.value;
     this.apiService
       .get('student/', {
         page: this.page(),
@@ -127,6 +137,7 @@ export class AllStudentsComponent {
         lastName,
         studentClass,
         status,
+        dateOfBirth: dateOfBirth ? format(dateOfBirth, 'yyyy-MM-dd') : null,
       })
       .subscribe({
         next: (response: any) => {
