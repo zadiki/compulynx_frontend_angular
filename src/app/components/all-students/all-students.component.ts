@@ -1,15 +1,14 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   inject,
-  Input,
-  model,
-  Output,
   signal,
   ViewChild,
 } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
+import { CalendarModule } from 'primeng/calendar';
+import { format } from 'date-fns';
+
 import { Student } from '../../models/student.model';
 import Swal from 'sweetalert2';
 import { ApiService } from '../../services/api.service';
@@ -19,7 +18,13 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-all-students',
-  imports: [NgFor, CommonModule, DatePickerModule, ReactiveFormsModule],
+  imports: [
+    NgFor,
+    CommonModule,
+    DatePickerModule,
+    CalendarModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './all-students.component.html',
   styleUrl: './all-students.component.scss',
 })
@@ -47,6 +52,8 @@ export class AllStudentsComponent {
     lastName: new FormControl(''),
     studentClass: new FormControl(''),
     status: new FormControl(''),
+    score: new FormControl(0),
+    dateOfBirth: new FormControl(new Date()),
   });
 
   ngOnInit() {
@@ -73,12 +80,15 @@ export class AllStudentsComponent {
     this.studentToEdit = student;
     this.editImageUrl = student.photoPath;
     this.photoToUpload = undefined;
-    const { firstName, lastName, status, studentClass } = this.studentToEdit;
+    const { firstName, lastName, status, studentClass, score, dateOfBirth } =
+      this.studentToEdit;
     this.editStudentForm.setValue({
       firstName,
       lastName,
       status,
       studentClass,
+      score,
+      dateOfBirth,
     });
     this.editModalInstance = new Modal(this.editElement.nativeElement, {});
     this.editModalInstance.show();
@@ -158,8 +168,16 @@ export class AllStudentsComponent {
     });
   }
 
-  editStudentInfo(payload: Student) {
+  editStudentInfo(payload: any) {
     let path = `student/${payload?.studentId}`;
+    if (payload.dateOfBirth) {
+      const formattedDateOfBirth = format(
+        payload.dateOfBirth,
+        'yyyy-MM-dd HH:mm:ss'
+      );
+      payload.dateOfBirth = formattedDateOfBirth;
+    }
+
     let body;
     if (this.photoToUpload) {
       body = new FormData();

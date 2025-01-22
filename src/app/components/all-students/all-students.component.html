@@ -30,16 +30,30 @@
         />
       </div>
       <div class="col-auto ps-3 pe-0">
-        <label for="dob" class="col-form-label">Date of birth</label>
+        <label for="dateOfBirth" class="col-form-label">Date of Birth</label>
       </div>
       <div class="col-2">
-        <p-datepicker formControlName="dateOfBirth" />
+        <p-calendar
+          formControlName="dateOfBirth"
+          dateFormat="yy-mm-dd"
+          showIcon="true"
+        >
+        </p-calendar>
       </div>
-      <div class="col">
-        <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary">filter</button>
-        </div>
+
+      <div class="col-auto ps-3 pe-0">
+        <label for="status" class="form-label">Status</label>
       </div>
+      <div class="col-2">
+        <select class="form-select" formControlName="status" required>
+          <option [value]="'ACTIVE'">ACTIVE</option>
+          <option [value]="'INACTIVE'">INACTIVE</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-2 mb-3">
+      <button type="submit" class="btn btn-primary">filter</button>
     </div>
   </form>
   <div class="table-responsive">
@@ -175,7 +189,7 @@
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">User Registration</h5>
@@ -210,29 +224,85 @@
             </label>
           </div>
 
-          <div class="mb-3">
-            <label for="firstName" class="form-label">First Name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="firstName"
-              formControlName="firstName"
-              required
-            />
+          <!-- First Name and Last Name -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="firstName" class="form-label">First Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="firstName"
+                formControlName="firstName"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="lastName"
+                formControlName="lastName"
+                required
+              />
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="lastName" class="form-label">Last Name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="lastName"
-              formControlName="lastName"
-              required
-            />
+
+          <!-- Student Class and Score -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="studentClass" class="form-label">Class</label>
+              <select
+                class="form-select"
+                id="studentClass"
+                formControlName="studentClass"
+                required
+              >
+                <option [value]="'CLASS_1'">Class 1</option>
+                <option [value]="'CLASS_2'">Class 2</option>
+                <option [value]="'CLASS_3'" selected>Class 3</option>
+                <option [value]="'CLASS_4'" selected>Class 4</option>
+                <option [value]="'CLASS_5'" selected>Class 5</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="score" class="form-label">Score</label>
+              <input
+                type="number"
+                class="form-control"
+                id="score"
+                formControlName="score"
+                required
+              />
+            </div>
           </div>
-          <div class="mb-3"></div>
-          <div class="mb-3"></div>
+
+          <!-- Date of Birth and Status -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="dateOfBirth" class="form-label">Date of Birth</label>
+              <p-calendar
+                formControlName="dateOfBirth"
+                dateFormat="yy-mm-dd"
+                showIcon="true"
+              >
+              </p-calendar>
+            </div>
+            <div class="col-md-6">
+              <label for="status" class="form-label">Status</label>
+              <select
+                class="form-select"
+                id="status"
+                formControlName="status"
+                required
+              >
+                <option [value]="'ACTIVE'">ACTIVE</option>
+                <option [value]="'INACTIVE'">INACTIVE</option>
+              </select>
+            </div>
+          </div>
         </div>
+
         <div class="modal-footer">
           <button
             type="button"
