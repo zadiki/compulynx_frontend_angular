@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <h2>Selected List</h2>
+  <table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Student Id</th>
+        <th>Full name</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let student of selected"
+        [class.table-success]="student.score >= 50"
+      >
+        <td>{{ student.studentId }}</td>
+        <td>{{ student.firstName }} {{ student.lastName }}</td>
+        <td>{{ student.score }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="d-flex">
+    <div class="p-2 ms-auto">
+      <div>Total: {{ totalScore }}</div>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,9 @@
+<div>
+  <app-average-score [selected]="selectedStdents()"></app-average-score>
+</div>
+<div>
+  <app-selected-students [selected]="selectedStdents()"></app-selected-students>
+</div>
 <div class="container my-4">
   <h2 class="text-center mb-4">All Student List</h2>
 
@@ -73,6 +79,13 @@
 
     <div class="d-flex justify-content-center mt-2 mb-3">
       <button type="submit" class="btn btn-primary">filter</button>
+      <button
+        type="button"
+        (click)="onExportExcelClicked()"
+        class="btn btn-primary"
+      >
+        GetExcel
+      </button>
     </div>
   </form>
   <div class="table-responsive">
@@ -126,6 +139,21 @@
                 (click)="openDeleteModal(student)"
               >
                 Delete
+              </button>
+              <button
+                class="btn btn-primary btn-sm ml-1"
+                *ngIf="!checkIfStudentIsSelected(student)"
+                (click)="addStudent(student)"
+              >
+                Add
+              </button>
+              <button
+                *ngIf="checkIfStudentIsSelected(student)"
+                class="btn btn-danger btn-sm"
+                #removeBtn
+                (click)="removeStudent(student)"
+              >
+                remove
               </button>
             </div>
           </td>

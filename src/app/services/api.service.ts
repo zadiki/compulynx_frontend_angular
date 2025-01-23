@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,15 @@ export class ApiService {
     params = cleanupParams(params);
     const headers = options.headers || new HttpHeaders();
     return this.http.get(`${this.baseUrl}/${endpoint}`, { headers, params });
+  }
+  getExcel(endpoint: string, params: any = {}, options: any = {}) {
+    params = cleanupParams(params);
+    const headers = options.headers || new HttpHeaders();
+    return this.http.get(`${this.baseUrl}/${endpoint}`, {
+      headers,
+      params,
+      responseType: 'blob',
+    });
   }
 
   put(endpoint: string, data: any, options: any = {}) {

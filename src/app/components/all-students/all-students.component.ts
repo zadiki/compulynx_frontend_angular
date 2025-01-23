@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   inject,
+  Signal,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -17,6 +18,8 @@ import { Modal } from 'bootstrap';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { SelectedStudentsComponent } from '../selected-students/selected-students.component';
+import { AverageScoreComponent } from '../average-score/average-score.component';
 
 @Component({
   selector: 'app-all-students',
@@ -26,6 +29,8 @@ import { filter } from 'rxjs';
     DatePickerModule,
     CalendarModule,
     ReactiveFormsModule,
+    SelectedStudentsComponent,
+    AverageScoreComponent,
   ],
   templateUrl: './all-students.component.html',
   styleUrl: './all-students.component.scss',
@@ -34,12 +39,13 @@ export class AllStudentsComponent {
   apiService = inject(ApiService);
   router = inject(Router);
   students = signal<Student[]>([]);
-
+  selectedStdents = signal<Student[]>([]);
   page = signal(0);
   isLast = signal(false);
   studentToDelete?: Student;
   studentToEdit?: Student;
   editImageUrl: string = '';
+
   filterForm = new FormGroup({
     count: new FormControl(0),
     firstName: new FormControl(''),
@@ -127,6 +133,21 @@ export class AllStudentsComponent {
     this.getAllStudents();
   }
 
+  addStudent(student: Student) {
+    this.selectedStdents.update((current) => [...current, student]);
+  }
+
+  checkIfStudentIsSelected(student: Student) {
+    return this.selectedStdents().some(
+      (s) => s.studentId === student.studentId
+    );
+  }
+
+  removeStudent(student: Student) {
+    this.selectedStdents.update((current) =>
+      current.filter((c) => c.studentId != student.studentId)
+    );
+  }
   getAllStudents() {
     const { firstName, lastName, studentClass, status, dateOfBirth } =
       this.filterForm.value;
@@ -265,5 +286,27 @@ export class AllStudentsComponent {
       reader.readAsDataURL(file);
       this.photoToUpload = file;
     }
+  }
+  onExportExcelClicked() {
+    this.apiService.getExcel('student/excel', {}, {}).subscribe({
+      next: (blob: any) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'students.xlsx'; // Suggested filename
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err: any) => {
+        Swal.fire({
+          title: `Error geting excel`,
+          text: 'Fcould not get excel.',
+          icon: 'error',
+        });
+        console.error('Error downloading the file', err);
+      },
+    });
   }
 }
