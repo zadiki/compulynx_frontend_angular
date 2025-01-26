@@ -75,6 +75,16 @@
           <option [value]="'INACTIVE'">INACTIVE</option>
         </select>
       </div>
+      <div class="col-auto ps-3 pe-0">
+        <label for="status" class="form-label">Required Action</label>
+      </div>
+      <div class="col-2">
+        <select class="form-select" formControlName="pendingTask" required>
+          <option [value]="'2'" selected>ALL</option>
+          <option [value]="'0'">None</option>
+          <option [value]="'1'">Pending</option>
+        </select>
+      </div>
     </div>
 
     <div class="d-flex justify-content-center mt-2 mb-3">

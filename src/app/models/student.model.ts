@@ -8,3 +8,21 @@ export interface Student {
   status: string;
   photoPath: string;
 }
+
+export interface StudentLog {
+  id: number;
+  student: Student;
+  actionType: string;
+  newValue: string;
+  actionStatus: string;
+  oldValue: string;
+  comment?: string;
+  approvedByUser?: { id: number; userName: string; roles: string };
+  createdByUser?: {
+    id: number;
+    userName: string;
+    roles: string;
+  };
+  creationDate: string;
+  updateDate?: string;
+}

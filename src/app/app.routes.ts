@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AllStudentsComponent } from './components/all-students/all-students.component';
+import { StudentChangeLogsComponent } from './components/student-change-logs/student-change-logs.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: DashboardComponent },
       { path: 'allStudents', component: AllStudentsComponent },
+      { path: 'logs', component: StudentChangeLogsComponent },
     ],
   },
 

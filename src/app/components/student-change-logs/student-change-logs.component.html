@@ -1,0 +1,209 @@
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Student Name</th>
+        <th scope="col">Action Type</th>
+        <th scope="col">Status</th>
+        <th scope="col">Old Value</th>
+        <th scope="col">New Value</th>
+        <th scope="col">Created By</th>
+        <th scope="col">Created On</th>
+        <th scope="col">Approved By</th>
+        <th scope="col">Approved On</th>
+        <th scope="col">Comment</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let log of studentLogs()"
+        [ngClass]="{
+          'table-primary': log.actionStatus === 'CREATED',
+          'table-warning': log.actionStatus === 'APPROVED',
+          'table-danger': log.actionStatus === 'rejected'
+        }"
+      >
+        <td>{{ log.id }}</td>
+        <td>{{ log.student.firstName }} {{ log.student.lastName }}</td>
+        <td>{{ log.actionType }}</td>
+        <td>{{ log.actionStatus }}</td>
+        <td>
+          <ng-content *ngIf="log.actionType == 'PHOTO_CHANGE'">
+            <div class="text-center position-relative">
+              <img
+                [src]="log.oldValue"
+                alt="Profile"
+                [style.width.px]="80"
+                [style.height.px]="80"
+                style="object-fit: cover"
+                class="rounded-circle img-thumbnail"
+              />
+            </div>
+          </ng-content>
+          <ng-content *ngIf="log.actionType != 'PHOTO_CHANGE'">
+            {{ log.oldValue }}
+          </ng-content>
+        </td>
+        <td>
+          <ng-content *ngIf="log.actionType == 'PHOTO_CHANGE'">
+            <div class="text-center position-relative">
+              <img
+                [src]="log.newValue"
+                alt="Profile"
+                [style.width.px]="80"
+                [style.height.px]="80"
+                style="object-fit: cover"
+                class="rounded-circle img-thumbnail"
+              />
+            </div>
+          </ng-content>
+          <ng-content *ngIf="log.actionType != 'PHOTO_CHANGE'">
+            {{ log.newValue }}
+          </ng-content>
+        </td>
+        <td>{{ log.createdByUser?.userName || "" }}</td>
+        <td>{{ getMomentdateFrpmString(log.creationDate) }}</td>
+        <td>{{ log.approvedByUser?.userName }}</td>
+        <td>{{ getMomentdateFrpmString(log.updateDate) }}</td>
+        <td>{{ log.comment }}</td>
+        <td>
+          <div class="btn-group" role="group" aria-label="Action Buttons">
+            @if (log.actionStatus=='CREATED' && !(
+            systemUser()?.userId==log.createdByUser?.id)) {
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="openApproveModal(log)"
+            >
+              Accept
+            </button>
+            } @if (log.actionStatus=='CREATED' && !(
+            systemUser()?.userId==log.createdByUser?.id)) {
+            <button
+              class="btn btn-danger btn-sm"
+              (click)="openDiscardeModal(log)"
+            >
+              Discard
+            </button>
+            }
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div
+  class="modal fade"
+  #rejectModal
+  tabindex="-1"
+  aria-labelledby=""
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm discard</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeRejectModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">
+          Are you sure you want to discard {{ logToEdit()?.actionType }} for
+          {{ logToEdit()?.student?.firstName }}
+          {{ logToEdit()?.student?.lastName }}? This action cannot be undone.
+        </p>
+        <textarea
+          id="textarea"
+          class="form-control"
+          rows="5"
+          placeholder="Write your feedback here..."
+          (change)="onCommentChange($event)"
+        >
+    {{ comment() }}</textarea
+        >
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="closeRejectModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          id="confirmDelete"
+          (click)="confirm()"
+        >
+          Discard
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  #approveModal
+  tabindex="-1"
+  aria-labelledby=""
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Approval</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeAcceptModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">
+          Are you sure you want to Approve {{ logToEdit()?.actionType }} for
+          {{ logToEdit()?.student?.firstName }}
+          {{ logToEdit()?.student?.lastName }}? This action cannot be undone.
+        </p>
+        <textarea
+          id="textarea"
+          class="form-control"
+          rows="5"
+          placeholder="Write your feedback here..."
+          (change)="onCommentChange($event)"
+        >
+    {{ comment() }}</textarea
+        >
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="closeAcceptModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="confirmDelete"
+          (click)="confirm('APPROVED')"
+        >
+          Approve
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -24,6 +24,7 @@ export class LoginComponent {
     private store: Store
   ) {}
   onSubmit() {
+    localStorage.removeItem('authToken');
     const { username: userName, password } = this.loginForm.value;
     const loginPayload = { userName, password };
     this.apiService.post('user/login', loginPayload).subscribe({

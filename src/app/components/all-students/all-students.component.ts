@@ -52,6 +52,7 @@ export class AllStudentsComponent {
     lastName: new FormControl(''),
     studentClass: new FormControl(''),
     score: new FormControl(''),
+    pendingTask: new FormControl(2),
     status: new FormControl(''),
     dateOfBirth: new FormControl(null),
   });
@@ -149,8 +150,14 @@ export class AllStudentsComponent {
     );
   }
   getAllStudents() {
-    const { firstName, lastName, studentClass, status, dateOfBirth } =
-      this.filterForm.value;
+    const {
+      firstName,
+      lastName,
+      studentClass,
+      status,
+      dateOfBirth,
+      pendingTask,
+    } = this.filterForm.value;
     this.apiService
       .get('student/', {
         page: this.page(),
@@ -158,6 +165,7 @@ export class AllStudentsComponent {
         lastName,
         studentClass,
         status,
+        pendingTask,
         dateOfBirth: dateOfBirth ? format(dateOfBirth, 'yyyy-MM-dd') : null,
       })
       .subscribe({
@@ -288,12 +296,12 @@ export class AllStudentsComponent {
     }
   }
   onExportExcelClicked() {
-    this.apiService.getExcel('student/excel', {}, {}).subscribe({
+    this.apiService.getExcel('student/excel').subscribe({
       next: (blob: any) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'students.xlsx'; // Suggested filename
+        a.download = `${new Date().toISOString()}-students.xlsx`; // Suggested filename
         document.body.appendChild(a);
         a.click();
         a.remove();
