@@ -1,3 +1,4 @@
 <div class="container-fluid">
+  <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <router-outlet />
 </div>

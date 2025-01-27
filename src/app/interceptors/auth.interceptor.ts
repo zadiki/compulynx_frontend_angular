@@ -1,4 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { LoaderService } from '../services/loader.service';
+import { finalize } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('authToken');
@@ -10,5 +13,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       },
     });
   }
-  return next(req);
+  let loaderService = inject(LoaderService);
+  loaderService.show();
+  return next(req).pipe(finalize(() => loaderService.hide()));
 };

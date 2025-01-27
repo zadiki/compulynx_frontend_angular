@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import Swal from 'sweetalert2';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,15 +14,15 @@ import { User } from '../../models/user.model';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
+  router = inject(Router);
+  apiService = inject(ApiService);
+  store = inject(Store);
+
   loginForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
   });
-  constructor(
-    private router: Router,
-    private apiService: ApiService,
-    private store: Store
-  ) {}
+
   onSubmit() {
     localStorage.removeItem('authToken');
     const { username: userName, password } = this.loginForm.value;
@@ -45,7 +45,11 @@ export class LoginComponent {
       },
       error: (err?) => {
         console.error(err);
-        alert('Login failed!');
+        Swal.fire({
+          title: `Loggin error`,
+          text: 'you have error logging in',
+          icon: 'error',
+        });
       },
     });
   }
